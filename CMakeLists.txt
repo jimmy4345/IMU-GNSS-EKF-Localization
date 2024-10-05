@@ -19,18 +19,32 @@ message(STATUS "SOURCE_DIRS: ${SOURCES}")
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 message(STATUS "INCLUDE_DIRS: ${PROJECT_SOURCE_DIR}/include")
 
+# Add the executable
+add_executable(EKF_Localization ${SOURCES})
 
-# Manually specify the Eigen3 directory
+
+# Manually specify the Eigen3-3.4.0 directory
 set(EIGEN3_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Thirdparty/eigen-3.4.0")
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 message(STATUS "The EIGEN header: ${EIGEN3_INCLUDE_DIR}")
 
+# Manually specify the yaml-cpp-0.7.0 directory
+set(YAML_CPP_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Thirdparty/yaml-cpp-0.7.0")
+add_subdirectory(${YAML_CPP_INCLUDE_DIR})
+
+message(STATUS "The yaml_cpp header: ${YAML_CPP_INCLUDE_DIR}")
+
+target_link_libraries(EKF_Localization yaml-cpp)
+
+# yaml-cpp-0.7.0
+# add_subdirectory(ThirdParty/yaml-cpp-0.7.0)
+# target_link_libraries(EKF_Localization yaml-cpp)
+
 
 # find_package()
 
-# Add the executable
-add_executable(EKF_Localization ${SOURCES})
+
 
 
 # target_link_libraries()
