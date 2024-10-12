@@ -21,6 +21,7 @@ public:
     static double rc_meridian(double lat);
     static Vector3d geo2ecef(const Vector3d &Pos_LLA);
     static Vector3d ecef2geo(const Vector3d &Pos_XYZ);
+    static Vector3d geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA);
 
 
     

@@ -1,4 +1,5 @@
 #include "Earth.hpp"
+#include "Rotation.hpp"
 
 /* Normal gravity*/
 double Earth::NormalGravity(const Vector3d &Pos_LLA) {
@@ -128,4 +129,23 @@ Vector3d Earth::ecef2geo(const Vector3d &Pos_XYZ)
 
     // Return geodetic coordinates [latitude, longitude, altitude] in radians and meters
     return {phi, lambda, h};       
+}
+
+/* Geodetic coordinates to NED coordinates relative to a reference point */
+Vector3d Earth::geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA)
+{
+    // Convert reference and target geodetic coordinates to ECEF
+    Vector3d ref_Pos_XYZ = Earth::geo2ecef(ref_Pos_LLA);
+    Vector3d Pos_XYZ = Earth::geo2ecef(Pos_LLA);
+
+    // Calculate the difference in ECEF coordinates
+    Vector3d delta_XYZ = Pos_XYZ - ref_Pos_XYZ;
+
+    // Compute the rotation matrix from ECEF to NED
+    Matrix3d C_en = Rotation::C_ne(ref_Pos_LLA).transpose();
+
+    // Convert the delta ECEF vector to NED coordinates
+    Vector3d Pos_NED = C_en * delta_XYZ;
+    
+    return Pos_NED;
 }
