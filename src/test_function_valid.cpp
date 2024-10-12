@@ -1,12 +1,6 @@
-#include <iostream>
-#include <Eigen/Dense>
-#include <yaml-cpp/yaml.h>
-#include <limits>
-
+#include "Global_defs.hpp"
 #include "Earth.hpp"
- 
-using Eigen::MatrixXd;
- 
+
 int main()
 {
     // test eigen
