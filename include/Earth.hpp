@@ -1,10 +1,7 @@
-#ifndef EARTH_H
-#define EARTH_H
+#ifndef EARTH_HPP
+#define EARTH_HPP
 
-#include <Eigen/Dense>
-#include <cmath>
-
-using Eigen::Vector3d;
+#include "Global_defs.hpp"
 
 class Earth
 {
@@ -18,11 +15,12 @@ public:
     static constexpr double WGS84_e2  = WGS84_e1 / (1 - WGS84_e1);   /* Second eccentricity squared */
     static constexpr double WGS84_GM0 = 3986004.418E+8;              /* Gravitational constant */
     
-    double NormalGravity(Vector3d Pos_LLA);
-    double rc_PrimeVertical(double lat);
-    double rc_meridian(double lat);
-    Vector3d geo2ecef(Vector3d Pos_LLA);
-    Vector3d ecef2geo(Vector3d Pos_XYZ);
+    // Earth relative function
+    static double NormalGravity(const Vector3d &Pos_LLA);
+    static double rc_PrimeVertical(double lat);
+    static double rc_meridian(double lat);
+    static Vector3d geo2ecef(const Vector3d &Pos_LLA);
+    static Vector3d ecef2geo(const Vector3d &Pos_XYZ);
 
 
     
@@ -30,4 +28,4 @@ public:
 
 
 
-#endif // EARTH_H
+#endif // EARTH_HPP
