@@ -1,6 +1,5 @@
 #include "Earth.hpp"
 
-
 /* Normal gravity*/
 double Earth::NormalGravity(Vector3d Pos_LLA) {
     // Constants
@@ -71,3 +70,62 @@ Vector3d Earth::geo2ecef(Vector3d Pos_LLA) {
 }
 
 /* ECEF coordinates to Geodetic coordinates */
+Vector3d Earth::ecef2geo(Vector3d Pos_XYZ)
+{
+    double rho = std::hypot(Pos_XYZ(0), Pos_XYZ(1)); // Horizontal distance from the Z-axis
+    double phi, lambda, h;
+
+    if (Earth::WGS84_f == 0)
+    {
+        // Spherical Earth case
+        phi = std::atan2(Pos_XYZ(2), rho);
+        h = std::hypot(Pos_XYZ(2), rho) - Earth::WGS84_a;
+    }
+    else
+    {
+        // Ellipsoidal Earth case: Using Bowring's method
+        double ae2 = Earth::WGS84_a * Earth::WGS84_e1;
+        double bep2 = Earth::WGS84_b * Earth::WGS84_e2;
+
+        // Initial value for parametric latitude (beta)
+        double r = std::hypot(rho, Pos_XYZ(2));  // Distance from the origin
+        double u = Earth::WGS84_a * rho;
+        double v = Earth::WGS84_b * Pos_XYZ(2) * (1 + bep2 / r);
+        double cosbeta = std::copysign(1.0, u) / std::hypot(1.0, v / u);
+        double sinbeta = std::copysign(1.0, v) / std::hypot(1.0, u / v);
+
+        // Iterative solution with Bowring's method (max 5 iterations)
+        for (int count = 0; count < 5; ++count) {
+            double cosprev = cosbeta;
+            double sinprev = sinbeta;
+
+            u = rho - ae2 * std::pow(cosbeta, 3);
+            v = Pos_XYZ(2) + bep2 * std::pow(sinbeta, 3);
+            double au = Earth::WGS84_a * u;
+            double bv = Earth::WGS84_b * v;
+
+            cosbeta = std::copysign(1.0, au) / std::hypot(1.0, bv / au);
+            sinbeta = std::copysign(1.0, bv) / std::hypot(1.0, au / bv);
+
+            // Check for convergence
+            if (std::hypot(cosbeta - cosprev, sinbeta - sinprev) <= std::numeric_limits<double>::epsilon()) {
+                break;
+            }
+        }
+
+        // Final geodetic latitude
+        phi = std::atan2(v, u);
+
+        // Final altitude (h)
+        double sinphi = std::sin(phi);
+        double cosphi = std::cos(phi);
+        double N = Earth::rc_PrimeVertical(phi);  // Prime vertical radius of curvature
+        h = rho * cosphi + (Pos_XYZ(2) + Earth::WGS84_e1 * N * sinphi) * sinphi - N;
+    }
+
+    // Longitude
+    lambda = std::atan2(Pos_XYZ(1), Pos_XYZ(0));
+
+    // Return geodetic coordinates [latitude, longitude, altitude] in radians and meters
+    return {phi, lambda, h};       
+}
