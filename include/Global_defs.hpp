@@ -2,6 +2,7 @@
 #define GLOBAL_DEFS_HPP
 
 // include eigen
+#include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
@@ -25,6 +26,7 @@
 using Eigen::Vector3d;
 using Eigen::Matrix3d;
 using Eigen::MatrixXd;
+using Eigen::Quaterniond;
 
 
 
