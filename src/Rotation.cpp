@@ -28,14 +28,14 @@ Matrix3d Rotation::C_ne(const Vector3d &Pos_LLA) //pos2dcm
 }
 
 /* Function to convert Euler angles (roll, pitch, heading) to Direction Cosine Matrix (DCM) */
-Matrix3d Rotation::euler2dcm(double roll, double pitch, double heading) //C_bn
+Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
 {
-    double cr = std::cos(roll);
-    double sr = std::sin(roll);
-    double cp = std::cos(pitch);
-    double sp = std::sin(pitch);
-    double ch = std::cos(heading);
-    double sh = std::sin(heading);
+    double cr = std::cos(euler[0]);
+    double sr = std::sin(euler[0]);
+    double cp = std::cos(euler[1]);
+    double sp = std::sin(euler[1]);
+    double ch = std::cos(euler[2]);
+    double sh = std::sin(euler[2]);
 
     Matrix3d dcm;
     dcm(0, 0) = cp * ch;
@@ -55,7 +55,7 @@ Matrix3d Rotation::euler2dcm(double roll, double pitch, double heading) //C_bn
 
 Vector3d Rotation::dcm2euler(const Matrix3d &dcm)
 {
-    Vector3d euler;
+    Vector3d euler; // [row; pitch; heading]
 
     euler[1] = std::atan(-dcm(2, 0) / std::sqrt(dcm(2, 1) * dcm(2, 1) + dcm(2, 2) * dcm(2, 2)));
 

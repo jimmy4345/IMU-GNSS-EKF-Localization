@@ -8,7 +8,7 @@ class Rotation
 public:
     // Rotation matrix
     static Matrix3d C_ne(const Vector3d &Pos_LLA);
-    static Matrix3d euler2dcm(double roll, double pitch, double heading);
+    static Matrix3d euler2dcm(const Vector3d &euler);
     static Vector3d dcm2euler(const Matrix3d &dcm);
     static Matrix3d quat2dcm(const Quaterniond &q);
     static Quaterniond dcm2quat(const Matrix3d &C);
