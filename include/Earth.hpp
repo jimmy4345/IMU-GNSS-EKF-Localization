@@ -22,6 +22,8 @@ public:
     static Vector3d geo2ecef(const Vector3d &Pos_LLA);
     static Vector3d ecef2geo(const Vector3d &Pos_XYZ);
     static Vector3d geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA);
+    static Vector3d w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED, 
+                           const double Rn, const double Rm); // TransRate
 
 
     

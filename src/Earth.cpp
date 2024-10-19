@@ -149,3 +149,15 @@ Vector3d Earth::geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA)
     
     return Pos_NED;
 }
+
+/* Calculates transport rate of navigation frame with respect to Earth frame - NED system */
+Vector3d Earth::w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED, 
+                       const double Rn, const double Rm) // TransRate
+{
+    Vector3d w_en_n;
+    w_en_n[0] = Vel_NED[1] / (Rn + Pos_LLA[2]);
+    w_en_n[1] = -Vel_NED[0] / (Rm + Pos_LLA[2]); 
+    w_en_n[2] = -Vel_NED[0] * std::tan(Pos_LLA[0]) / (Rn +Pos_LLA[2]);
+
+   return w_en_n;
+}
