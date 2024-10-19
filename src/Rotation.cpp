@@ -27,6 +27,26 @@ Matrix3d Rotation::C_ne(const Vector3d &Pos_LLA) //pos2dcm
     return C_ne;
 }
 
+/* Transformation quaternion of navigation frame -> earth frame */
+Quaterniond Rotation::q_ne(const Vector3d &Pos_LLA) //pos2quat
+{
+    Quaterniond q;
+    double lat = Pos_LLA[0];
+    double lon = Pos_LLA[1];
+
+    double s_lat = std::sin(-M_PI * 0.25 - lat * 0.5);
+    double c_lat = std::cos(-M_PI * 0.25 - lat * 0.5);
+    double s_lon = std::sin(lon * 0.5);
+    double c_lon = std::cos(lon * 0.5);
+
+    q.w() = c_lat * c_lon;
+    q.x() = -s_lat * s_lon;
+    q.y() = s_lat * c_lon;
+    q.z() = c_lat * s_lon;
+
+    return q;
+}
+
 /* Function to convert Euler angles (roll, pitch, heading) to Direction Cosine Matrix (DCM) */
 Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
 {
