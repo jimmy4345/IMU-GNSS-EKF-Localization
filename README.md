@@ -8,9 +8,34 @@ This is an Extended Kalman Filter(EKF)-based GNSS/INS integrated navigation syst
 
 
 ## Folder Structure
-
-TBD
-
+```bash
+IMU-GNSS-EKF-Localization/
+│  .gitignore
+│  CMakeLists.txt
+│  LICENSE
+│  README.md
+│
+├─config
+│      config.yaml
+│
+├─include
+│      Angle.hpp
+│      Earth.hpp
+│      Global_defs.hpp
+│      Rotation.hpp
+│
+├─sample_data
+├─src
+│      Angle.cpp
+│      Earth.cpp
+│      Rotation.cpp
+│      test_function_valid.cpp
+│
+├─tests
+└─Thirdparty
+    ├─eigen-3.4.0
+    └─yaml-cpp-0.7.0
+```
 
 ## Program Dependencies
 
