@@ -24,7 +24,9 @@ public:
     static Vector3d geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA);
     static Vector3d w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED, 
                            const double Rn, const double Rm); // TransRate
-
+    static Vector3d LeverArmPos(const Vector3d &GNSS_Pos, const Vector3d &LeverArm,
+                                const Matrix3d C_bn, const double Rn, const double Rm);
+                                
 
     
 };

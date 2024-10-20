@@ -161,3 +161,18 @@ Vector3d Earth::w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED,
 
    return w_en_n;
 }
+
+Vector3d Earth::LeverArmPos(const Vector3d &GNSS_Pos, const Vector3d &LeverArm,
+                            const Matrix3d C_bn, const double Rn, const double Rm)
+{
+    Vector3d dr = C_bn * LeverArm;
+    
+    Vector3d dr1;
+    dr1[0] = dr[0] / (Rm + GNSS_Pos[2]);
+    dr1[1] = dr[1] / (Rn + GNSS_Pos[2]) / std::cos(GNSS_Pos[0]);
+    dr1[2] = -dr[2];
+
+    Vector3d Imu_Pos = GNSS_Pos - dr1;
+
+    return Imu_Pos;
+}
