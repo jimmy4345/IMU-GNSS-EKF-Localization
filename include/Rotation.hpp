@@ -13,6 +13,7 @@ public:
     static Vector3d dcm2euler(const Matrix3d &dcm);
     static Matrix3d quat2dcm(const Quaterniond &q);
     static Quaterniond dcm2quat(const Matrix3d &C);
+    static Quaterniond rvec2quat(const Vector3d & rot_vec);
 
 };
 

@@ -156,11 +156,53 @@ Quaterniond Rotation::dcm2quat(const Matrix3d &C)
         q.z() = 0.25 * s;
     }
 
-    if (q.w() < 0) {
+    if (q.w() < 0) 
+    {
         q.coeffs() *= -1;
     }
 
     return q;
 }
+
+Quaterniond Rotation::rvec2quat(const Vector3d &rot_vec)
+{
+    Quaterniond q;
+    double mag2 = rot_vec.squaredNorm();
+
+    if(mag2 < (M_PI * M_PI))
+    {
+        // Approximate solution
+        double mag2_scaled = 0.25 * mag2;
+
+        // Using Taylor expansion approximation for cosine and sine
+        double c = 1.0 - mag2_scaled / 2.0 * (1.0 - mag2_scaled / 12.0 * (1.0 - mag2_scaled / 30.0));
+        double s = 1.0 - mag2_scaled / 6.0 * (1.0 - mag2_scaled / 20.0 * (1.0 - mag2_scaled / 42.0));
+
+        q.w() = c;
+        q.x() = s * 0.5 * rot_vec[0];
+        q.y() = s * 0.5 * rot_vec[1];
+        q.z() = s * 0.5 * rot_vec[2];
+    }
+    else
+    {
+        // Analytical solution
+        double mag = std::sqrt(mag2);
+        double s_mag = std::sin(mag / 2.0);
+        double c_mag = std::cos(mag / 2.0);
+
+        q.w() = c_mag;
+        q.x() = rot_vec[0] * s_mag / mag;
+        q.y() = rot_vec[1] * s_mag / mag;
+        q.z() = rot_vec[2] * s_mag / mag;
+
+        if (q.w() < 0) 
+        {
+            q.coeffs() *= -1;
+        }    
+    }
+
+    return q;
+}
+
 
 
