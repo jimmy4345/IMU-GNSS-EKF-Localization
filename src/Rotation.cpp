@@ -204,5 +204,15 @@ Quaterniond Rotation::rvec2quat(const Vector3d &rot_vec)
     return q;
 }
 
+Vector3d Rotation::dpos2rvec(const double lat,
+                             const double delta_lat, const double delta_lon)
+{
+    Vector3d rot_vec;
+    
+    rot_vec[0] = delta_lon * std::cos(lat);
+    rot_vec[1] = -delta_lat;
+    rot_vec[2] = -delta_lon * std::sin(lat);
 
+    return rot_vec;
+}
 
