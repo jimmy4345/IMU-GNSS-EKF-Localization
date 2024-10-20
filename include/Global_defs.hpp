@@ -27,7 +27,7 @@ using Eigen::Vector3d;
 using Eigen::Matrix3d;
 using Eigen::MatrixXd;
 using Eigen::Quaterniond;
-
+using Eigen::RowVector2d;
 
 
 

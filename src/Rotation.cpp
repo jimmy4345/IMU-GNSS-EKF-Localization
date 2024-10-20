@@ -47,6 +47,17 @@ Quaterniond Rotation::q_ne(const Vector3d &Pos_LLA) //pos2quat
     return q;
 }
 
+/* Quaternion corrresponding to position */
+RowVector2d Rotation::quat2pos(const Quaterniond &q_ne)
+{
+    RowVector2d Pos;
+
+    Pos[0] = -2 * std::atan(q_ne.y() / q_ne.w()) - M_PI / 2;    
+    Pos[1] = 2 * std::atan2(q_ne.z(), q_ne.w());
+
+    return Pos;
+}
+
 /* Function to convert Euler angles (roll, pitch, heading) to Direction Cosine Matrix (DCM) */
 Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
 {
@@ -214,5 +225,17 @@ Vector3d Rotation::dpos2rvec(const double lat,
     rot_vec[2] = -delta_lon * std::sin(lat);
 
     return rot_vec;
+}
+
+Quaterniond Rotation::quatprod(const Quaterniond& q, const Quaterniond& p) {
+    // Quaternion multiplication using Eigen's overloaded operator
+    Quaterniond result = q * p;
+
+    // Ensure the scalar component is positive
+    if (result.w() < 0) {
+        result.coeffs() *= -1;
+    }
+
+    return result;
 }
 
