@@ -32,3 +32,31 @@ Vector3d Angle::latlon_rad2deg(const Vector3d &Pos_LLA)
 
     return deg_Pos;
 }
+
+/* Function to wrap an angle to the range (-π, π] */
+double Angle::wrap2pi(double angle)
+{
+    // Use fmod to bring the angle within the range (0, 2π]
+    angle = fmod(angle + M_PI, 2 * M_PI);
+
+    // Wrap to (0, 2π] if negative
+    if (angle < 0) {
+        angle += 2 * M_PI;
+    }
+
+    // Shift to (-π, π]
+    angle -= M_PI;
+
+    // Handle the edge case where angle is exactly -π
+    if (angle == -M_PI) {
+        angle = M_PI;
+    }
+
+    return angle;
+}
+
+double Angle::dist_ang(double angle1, double angle2)
+{
+    double angle = Angle::wrap2pi(Angle::wrap2pi(angle2) - Angle::wrap2pi(angle1));
+    return angle;
+}

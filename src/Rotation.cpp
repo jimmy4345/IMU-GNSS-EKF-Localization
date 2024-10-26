@@ -104,10 +104,7 @@ Vector3d Rotation::dcm2euler(const Matrix3d &dcm)
     {
         euler[0] = atan2(dcm(2, 1), dcm(2, 2));
         euler[2] = atan2(dcm(1, 0), dcm(0, 0));
-    }
-
-    // heading 0 ~ 2PI
-    euler[2] = std::fmod(euler[2] + 2 * M_PI, 2 * M_PI);        
+    }      
 
     return euler;
 }
