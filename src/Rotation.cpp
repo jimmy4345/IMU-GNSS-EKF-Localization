@@ -239,3 +239,22 @@ Quaterniond Rotation::quatprod(const Quaterniond& q, const Quaterniond& p) {
     return result;
 }
 
+/* Generates a skew-symmetric matrix from a 3D vector */
+Matrix3d Rotation::skew_symmetric(const Vector3d &vector)
+{
+    Matrix3d mat;
+
+    mat(0, 0) = 0;
+    mat(0, 1) = -vector[2];
+    mat(0, 2) = vector[1];
+
+    mat(1, 0) = vector[2];
+    mat(1, 1) = 0;
+    mat(1, 2) = -vector[0];
+
+    mat(2, 0) = -vector[1];
+    mat(2, 1) = vector[0];
+    mat(2, 2) = 0;
+
+    return mat;
+}

@@ -18,7 +18,7 @@ public:
     static Vector3d dpos2rvec(const double lat,
                               const double delta_lat, const double delta_lon);
     static Quaterniond quatprod(const Quaterniond& q, const Quaterniond& p);
-
+    static Matrix3d skew_symmetric(const Vector3d &vector); //cp_form
 
 };
 
