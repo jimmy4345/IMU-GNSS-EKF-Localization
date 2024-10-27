@@ -1,5 +1,4 @@
 #include "Earth.hpp"
-#include "Rotation.hpp"
 
 /* Normal gravity*/
 double Earth::NormalGravity(const Eigen::Vector3d &Pos_LLA) {

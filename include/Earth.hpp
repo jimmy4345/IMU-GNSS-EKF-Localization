@@ -2,6 +2,7 @@
 #define EARTH_HPP
 
 #include "Global_defs.hpp"
+#include "Rotation.hpp"
 
 class Earth
 {
