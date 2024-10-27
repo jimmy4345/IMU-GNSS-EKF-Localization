@@ -23,13 +23,5 @@
 #include <yaml-cpp/yaml.h>
 
 
-using Eigen::Vector3d;
-using Eigen::Matrix3d;
-using Eigen::MatrixXd;
-using Eigen::Quaterniond;
-using Eigen::RowVector2d;
-
-
-
 
 #endif // GLOBAL_DEFS_HPP

@@ -5,7 +5,7 @@
 int main()
 {
     // test eigen
-    MatrixXd m(2,2);
+    Eigen::MatrixXd m(2,2);
     m(0,0) = 3;
     m(1,0) = 2.5;
     m(0,1) = -1;
@@ -52,13 +52,13 @@ int main()
     std::cout << std::endl;
 
     // Define a Vector3d representing latitude, longitude, height in degrees
-    Vector3d pos_deg(45.0, 90.0, 100.0);  // 45° latitude, 90° longitude, 100 meters height
+    Eigen::Vector3d pos_deg(45.0, 90.0, 100.0);  // 45° latitude, 90° longitude, 100 meters height
 
     // Convert degrees to radians
-    Vector3d pos_rad = Angle::latlon_deg2rad(pos_deg);
+    Eigen::Vector3d pos_rad = Angle::latlon_deg2rad(pos_deg);
 
     // Expected radian values
-    Vector3d expected_rad(M_PI / 4, M_PI / 2, 100.0);
+    Eigen::Vector3d expected_rad(M_PI / 4, M_PI / 2, 100.0);
 
     // Check conversion from degrees to radians
     std::cout << "Degrees to Radians:" << std::endl;
@@ -72,7 +72,7 @@ int main()
     }
 
     // Convert radians back to degrees
-    Vector3d pos_deg_converted = Angle::latlon_rad2deg(pos_rad);
+    Eigen::Vector3d pos_deg_converted = Angle::latlon_rad2deg(pos_rad);
 
     // Check conversion from radians back to degrees
     std::cout << "\nRadians to Degrees:" << std::endl;

@@ -16,16 +16,16 @@ public:
     static constexpr double WGS84_GM0 = 3986004.418E+8;              /* Gravitational constant */
     
     // Earth relative function
-    static double NormalGravity(const Vector3d &Pos_LLA);
+    static double NormalGravity(const Eigen::Vector3d &Pos_LLA);
     static double rc_PrimeVertical(double lat);
     static double rc_meridian(double lat);
-    static Vector3d geo2ecef(const Vector3d &Pos_LLA);
-    static Vector3d ecef2geo(const Vector3d &Pos_XYZ);
-    static Vector3d geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA);
-    static Vector3d w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED, 
+    static Eigen::Vector3d geo2ecef(const Eigen::Vector3d &Pos_LLA);
+    static Eigen::Vector3d ecef2geo(const Eigen::Vector3d &Pos_XYZ);
+    static Eigen::Vector3d geo2ned(const Eigen::Vector3d &ref_Pos_LLA, const Eigen::Vector3d &Pos_LLA);
+    static Eigen::Vector3d w_en_n(const Eigen::Vector3d &Pos_LLA, const Eigen::Vector3d &Vel_NED, 
                            const double Rn, const double Rm); // TransRate
-    static Vector3d LeverArmPos(const Vector3d &GNSS_Pos, const Vector3d &LeverArm,
-                                const Matrix3d C_bn, const double Rn, const double Rm);
+    static Eigen::Vector3d LeverArmPos(const Eigen::Vector3d &GNSS_Pos, const Eigen::Vector3d &LeverArm,
+                                const Eigen::Matrix3d C_bn, const double Rn, const double Rm);
                                 
 
     

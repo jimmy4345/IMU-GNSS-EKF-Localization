@@ -1,7 +1,7 @@
 #include "Rotation.hpp"
 
 /* Transformation matrix of navigation frame -> earth frame */
-Matrix3d Rotation::C_ne(const Vector3d &Pos_LLA) //pos2dcm
+Eigen::Matrix3d Rotation::C_ne(const Eigen::Vector3d &Pos_LLA) //pos2dcm
 {
     double lat = Pos_LLA[0];
     double lon = Pos_LLA[1];
@@ -11,7 +11,7 @@ Matrix3d Rotation::C_ne(const Vector3d &Pos_LLA) //pos2dcm
     double s_lon = std::sin(lon);
     double c_lon = std::cos(lon);
 
-    Matrix3d C_ne;
+    Eigen::Matrix3d C_ne;
     C_ne(0, 0) = -s_lat * c_lon;
     C_ne(0, 1) = -s_lon;
     C_ne(0, 2) = -c_lat * c_lon;
@@ -28,9 +28,9 @@ Matrix3d Rotation::C_ne(const Vector3d &Pos_LLA) //pos2dcm
 }
 
 /* Transformation quaternion of navigation frame -> earth frame */
-Quaterniond Rotation::q_ne(const Vector3d &Pos_LLA) //pos2quat
+Eigen::Quaterniond Rotation::q_ne(const Eigen::Vector3d &Pos_LLA) //pos2quat
 {
-    Quaterniond q;
+    Eigen::Quaterniond q;
     double lat = Pos_LLA[0];
     double lon = Pos_LLA[1];
 
@@ -48,9 +48,9 @@ Quaterniond Rotation::q_ne(const Vector3d &Pos_LLA) //pos2quat
 }
 
 /* Quaternion corrresponding to position */
-RowVector2d Rotation::quat2pos(const Quaterniond &q_ne)
+Eigen::RowVector2d Rotation::quat2pos(const Eigen::Quaterniond &q_ne)
 {
-    RowVector2d Pos;
+    Eigen::RowVector2d Pos;
 
     Pos[0] = -2 * std::atan(q_ne.y() / q_ne.w()) - M_PI / 2;    
     Pos[1] = 2 * std::atan2(q_ne.z(), q_ne.w());
@@ -59,7 +59,7 @@ RowVector2d Rotation::quat2pos(const Quaterniond &q_ne)
 }
 
 /* Function to convert Euler angles (roll, pitch, heading) to Direction Cosine Matrix (DCM) */
-Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
+Eigen::Matrix3d Rotation::euler2dcm(const Eigen::Vector3d &euler) //C_bn
 {
     double cr = std::cos(euler[0]);
     double sr = std::sin(euler[0]);
@@ -68,7 +68,7 @@ Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
     double ch = std::cos(euler[2]);
     double sh = std::sin(euler[2]);
 
-    Matrix3d dcm;
+    Eigen::Matrix3d dcm;
     dcm(0, 0) = cp * ch;
     dcm(0, 1) = -cr * sh + sr * sp * ch; 
     dcm(0, 2) = sr * sh + cr * sp * ch;
@@ -84,9 +84,9 @@ Matrix3d Rotation::euler2dcm(const Vector3d &euler) //C_bn
     return dcm;
 }
 
-Vector3d Rotation::dcm2euler(const Matrix3d &dcm)
+Eigen::Vector3d Rotation::dcm2euler(const Eigen::Matrix3d &dcm)
 {
-    Vector3d euler; // [row; pitch; heading]
+    Eigen::Vector3d euler; // [row; pitch; heading]
 
     euler[1] = std::atan(-dcm(2, 0) / std::sqrt(dcm(2, 1) * dcm(2, 1) + dcm(2, 2) * dcm(2, 2)));
 
@@ -109,9 +109,9 @@ Vector3d Rotation::dcm2euler(const Matrix3d &dcm)
     return euler;
 }
 
-Matrix3d Rotation::quat2dcm(const Quaterniond &q)
+Eigen::Matrix3d Rotation::quat2dcm(const Eigen::Quaterniond &q)
 {
-    Matrix3d C;
+    Eigen::Matrix3d C;
     C(0, 0) = q.w() * q.w() + q.x() * q.x() - q.y() * q.y() - q.z() * q.z();
     C(0, 1) = 2 * (q.x() * q.y() - q.w() * q.z());
     C(0, 2) = 2 * (q.w() * q.y() + q.x() * q.z());
@@ -127,9 +127,9 @@ Matrix3d Rotation::quat2dcm(const Quaterniond &q)
     return C;
 }
 
-Quaterniond Rotation::dcm2quat(const Matrix3d &C)
+Eigen::Quaterniond Rotation::dcm2quat(const Eigen::Matrix3d &C)
 {
-    Quaterniond q;
+    Eigen::Quaterniond q;
     double trace = C(0, 0) + C(1, 1) + C(2, 2);
     if (trace > 0.0)
     {
@@ -172,9 +172,9 @@ Quaterniond Rotation::dcm2quat(const Matrix3d &C)
     return q;
 }
 
-Quaterniond Rotation::rvec2quat(const Vector3d &rot_vec)
+Eigen::Quaterniond Rotation::rvec2quat(const Eigen::Vector3d &rot_vec)
 {
-    Quaterniond q;
+    Eigen::Quaterniond q;
     double mag2 = rot_vec.squaredNorm();
 
     if(mag2 < (M_PI * M_PI))
@@ -212,10 +212,10 @@ Quaterniond Rotation::rvec2quat(const Vector3d &rot_vec)
     return q;
 }
 
-Vector3d Rotation::dpos2rvec(const double lat,
+Eigen::Vector3d Rotation::dpos2rvec(const double lat,
                              const double delta_lat, const double delta_lon)
 {
-    Vector3d rot_vec;
+    Eigen::Vector3d rot_vec;
     
     rot_vec[0] = delta_lon * std::cos(lat);
     rot_vec[1] = -delta_lat;
@@ -224,9 +224,9 @@ Vector3d Rotation::dpos2rvec(const double lat,
     return rot_vec;
 }
 
-Quaterniond Rotation::quatprod(const Quaterniond& q, const Quaterniond& p) {
+Eigen::Quaterniond Rotation::quatprod(const Eigen::Quaterniond& q, const Eigen::Quaterniond& p) {
     // Quaternion multiplication using Eigen's overloaded operator
-    Quaterniond result = q * p;
+    Eigen::Quaterniond result = q * p;
 
     // Ensure the scalar component is positive
     if (result.w() < 0) {
@@ -237,9 +237,9 @@ Quaterniond Rotation::quatprod(const Quaterniond& q, const Quaterniond& p) {
 }
 
 /* Generates a skew-symmetric matrix from a 3D vector */
-Matrix3d Rotation::skew_symmetric(const Vector3d &vector)
+Eigen::Matrix3d Rotation::skew_symmetric(const Eigen::Vector3d &vector)
 {
-    Matrix3d mat;
+    Eigen::Matrix3d mat;
 
     mat(0, 0) = 0;
     mat(0, 1) = -vector[2];

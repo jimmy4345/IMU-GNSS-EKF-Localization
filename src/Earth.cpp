@@ -2,7 +2,7 @@
 #include "Rotation.hpp"
 
 /* Normal gravity*/
-double Earth::NormalGravity(const Vector3d &Pos_LLA) {
+double Earth::NormalGravity(const Eigen::Vector3d &Pos_LLA) {
     // Constants
     constexpr double a1 = 9.7803267715;
     constexpr double a2 = 0.0052790414;
@@ -45,7 +45,7 @@ double Earth::rc_meridian(double lat)
 }
 
 /* Geodetic coordinates to ECEF coordinates */
-Vector3d Earth::geo2ecef(const Vector3d &Pos_LLA) {
+Eigen::Vector3d Earth::geo2ecef(const Eigen::Vector3d &Pos_LLA) {
     // Latitude and longitude in radians
     double lat = Pos_LLA[0];
     double lon = Pos_LLA[1];
@@ -62,7 +62,7 @@ Vector3d Earth::geo2ecef(const Vector3d &Pos_LLA) {
     double Rn_h = Rn + alt;                    // Rn + height (altitude)
 
     // Compute ECEF coordinates
-    Vector3d Pos_XYZ;
+    Eigen::Vector3d Pos_XYZ;
     Pos_XYZ << Rn_h * c_lat * c_lon,                        // X-coordinate
                Rn_h * c_lat * s_lon,                        // Y-coordinate
                (Rn * (1 - Earth::WGS84_e1) + alt) * s_lat;  // Z-coordinate
@@ -71,7 +71,7 @@ Vector3d Earth::geo2ecef(const Vector3d &Pos_LLA) {
 }
 
 /* ECEF coordinates to Geodetic coordinates */
-Vector3d Earth::ecef2geo(const Vector3d &Pos_XYZ)
+Eigen::Vector3d Earth::ecef2geo(const Eigen::Vector3d &Pos_XYZ)
 {
     double rho = std::hypot(Pos_XYZ[0], Pos_XYZ[1]); // Horizontal distance from the Z-axis
     double phi, lambda, h;
@@ -132,29 +132,29 @@ Vector3d Earth::ecef2geo(const Vector3d &Pos_XYZ)
 }
 
 /* Geodetic coordinates to NED coordinates relative to a reference point */
-Vector3d Earth::geo2ned(const Vector3d &ref_Pos_LLA, const Vector3d &Pos_LLA)
+Eigen::Vector3d Earth::geo2ned(const Eigen::Vector3d &ref_Pos_LLA, const Eigen::Vector3d &Pos_LLA)
 {
     // Convert reference and target geodetic coordinates to ECEF
-    Vector3d ref_Pos_XYZ = Earth::geo2ecef(ref_Pos_LLA);
-    Vector3d Pos_XYZ = Earth::geo2ecef(Pos_LLA);
+    Eigen::Vector3d ref_Pos_XYZ = Earth::geo2ecef(ref_Pos_LLA);
+    Eigen::Vector3d Pos_XYZ = Earth::geo2ecef(Pos_LLA);
 
     // Calculate the difference in ECEF coordinates
-    Vector3d delta_XYZ = Pos_XYZ - ref_Pos_XYZ;
+    Eigen::Vector3d delta_XYZ = Pos_XYZ - ref_Pos_XYZ;
 
     // Compute the rotation matrix from ECEF to NED
-    Matrix3d C_en = Rotation::C_ne(ref_Pos_LLA).transpose();
+    Eigen::Matrix3d C_en = Rotation::C_ne(ref_Pos_LLA).transpose();
 
     // Convert the delta ECEF vector to NED coordinates
-    Vector3d Pos_NED = C_en * delta_XYZ;
+    Eigen::Vector3d Pos_NED = C_en * delta_XYZ;
     
     return Pos_NED;
 }
 
 /* Calculates transport rate of navigation frame with respect to Earth frame - NED system */
-Vector3d Earth::w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED, 
+Eigen::Vector3d Earth::w_en_n(const Eigen::Vector3d &Pos_LLA, const Eigen::Vector3d &Vel_NED, 
                        const double Rn, const double Rm) // TransRate
 {
-    Vector3d w_en_n;
+    Eigen::Vector3d w_en_n;
     w_en_n[0] = Vel_NED[1] / (Rn + Pos_LLA[2]);
     w_en_n[1] = -Vel_NED[0] / (Rm + Pos_LLA[2]); 
     w_en_n[2] = -Vel_NED[0] * std::tan(Pos_LLA[0]) / (Rn +Pos_LLA[2]);
@@ -162,17 +162,17 @@ Vector3d Earth::w_en_n(const Vector3d &Pos_LLA, const Vector3d &Vel_NED,
    return w_en_n;
 }
 
-Vector3d Earth::LeverArmPos(const Vector3d &GNSS_Pos, const Vector3d &LeverArm,
-                            const Matrix3d C_bn, const double Rn, const double Rm)
+Eigen::Vector3d Earth::LeverArmPos(const Eigen::Vector3d &GNSS_Pos, const Eigen::Vector3d &LeverArm,
+                            const Eigen::Matrix3d C_bn, const double Rn, const double Rm)
 {
-    Vector3d dr = C_bn * LeverArm;
+    Eigen::Vector3d dr = C_bn * LeverArm;
     
-    Vector3d dr1;
+    Eigen::Vector3d dr1;
     dr1[0] = dr[0] / (Rm + GNSS_Pos[2]);
     dr1[1] = dr[1] / (Rn + GNSS_Pos[2]) / std::cos(GNSS_Pos[0]);
     dr1[2] = -dr[2];
 
-    Vector3d Imu_Pos = GNSS_Pos - dr1;
+    Eigen::Vector3d Imu_Pos = GNSS_Pos - dr1;
 
     return Imu_Pos;
 }
